@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPIWallet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- CUSTOM TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container"></div>
+
+    <!-- CUSTOM UPI PIN POP-UP MODAL -->
+    <div id="pin-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>🔒 Enter Security PIN</h3>
+                <button id="close-modal-btn" class="close-btn">&times;</button>
+            </div>
+            <p>Please enter your 4-digit UPI PIN to authorize this transaction.</p>
+            <div class="form-group">
+                <input type="password" id="modal-pin-input" placeholder="XXXX" maxlength="4" style="text-align: center; font-size: 1.5rem; letter-spacing: 10px;">
+            </div>
+            <div class="modal-actions">
+                <button id="cancel-payment-btn" class="btn-secondary">Cancel</button>
+                <button id="confirm-payment-btn" class="btn-primary">Confirm & Pay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 1. LOGIN PAGE ================= -->
+    <div id="login-page" class="page-container auth-screen">
+        <div class="auth-card-left">
+            <h1>Smart UPI access with a premium wallet experience.</h1>
+            <p>Secure payments, elegant controls, and a modern interface built to feel like a real fintech product.</p>
+            <div class="features-badge">
+                <span>⚡ INSTANT UPI Payments</span>
+                <span>🔒 PROTECTED PIN-secured flows</span>
+                <span>📊 CLEAR Live wallet overview</span>
+            </div>
+        </div>
+        <div class="auth-card-right">
+            <h2>Welcome back</h2>
+            <p>Sign in to access your wallet</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>UPI ID</label>
+                    <input type="text" id="login-upi" placeholder="username@upi" required>
+                </div>
+                <div class="form-group">
+                    <label>UPI PIN</label>
+                    <input type="password" id="login-pin" placeholder="4 digit PIN" maxlength="4" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+            <p class="auth-switch-text">New to UPIWallet? <button id="to-register-btn" class="btn-link">Register here</button></p>
+        </div>
+    </div>
+
+    <!-- ================= 2. REGISTRATION PAGE ================= -->
+    <div id="register-page" class="page-container auth-screen hidden">
+        <div class="auth-card-left">
+            <h1>Create Your Premium Wallet Account.</h1>
+            <p>Join thousands of users managing their transactions seamlessly with instant verification and high security.</p>
+        </div>
+        <div class="auth-card-right">
+            <h2>Register Account</h2>
+            <p>Enter your details to create a virtual wallet</p>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>DISPLAY NAME</label>
+                    <input type="text" id="reg-name" placeholder="e.g. John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>USER ID (For your @upi tag)</label>
+                    <input type="text" id="reg-userid" placeholder="e.g. johndoe" required>
+                </div>
+                <div class="form-group">
+                    <label>EMAIL ADDRESS</label>
+                    <input type="email" id="reg-email" placeholder="john@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>PHONE NUMBER</label>
+                    <input type="tel" id="reg-phone" placeholder="9999999999" maxlength="10" required>
+                </div>
+                <div class="form-group">
+                    <label>INITIAL WALLET BALANCE (₹)</label>
+                    <input type="number" id="reg-balance" placeholder="e.g. 10000" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>CHOOSE 4-DIGIT PIN</label>
+                    <input type="password" id="reg-pin" placeholder="XXXX" maxlength="4" required>
+                </div>
+                <button type="submit" class="btn-primary">Create Wallet</button>
+            </form>
+            <p class="auth-switch-text">Already have a wallet? <button id="to-login-btn" class="btn-link">Back to Login</button></p>
+        </div>
+    </div>
+
+    <!-- ================= 3. MAIN APP PANEL ================= -->
+    <div id="app-page" class="page-container hidden">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">💳</div>
+                <div>
+                    <h3>FinVault</h3>
+                    <small>PREMIUM DIGITAL WALLET</small>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-item active" data-target="dashboard-view">🏠 Dashboard</button>
+                <button class="nav-item" data-target="send-view">💸 Send Money</button>
+                <button class="nav-item" data-target="history-view">⏳ History</button>
+                <button class="nav-item" data-target="profile-view">👤 Profile</button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1 id="view-title">Dashboard</h1>
+                <div class="user-badge">
+                    <div class="avatar" id="header-avatar">-</div>
+                    <div>
+                        <h4 id="header-username">Loading...</h4>
+                        <small id="header-upi">... </small>
+                    </div>
+                    <button id="logout-btn" class="btn-logout">Logout</button>
+                </div>
+            </header>
+
+            <!-- VIEW: DASHBOARD -->
+            <section id="dashboard-view" class="app-view">
+                <div class="hero-balance-card">
+                    <small>WALLET BALANCE</small>
+                    <h2 class="balance-display">₹<span id="dash-balance">0</span></h2>
+                    <span class="upi-tag" id="dash-upi">upi-id</span>
+                    
+                    <div class="balance-meta">
+                        <div>
+                            <small>Daily Limit</small>
+                            <p>₹10,000</p>
+                        </div>
+                        <div>
+                            <small>Today Spent</small>
+                            <p>₹<span id="dash-spent">0</span></p>
+                        </div>
+                        <div>
+                            <small>Transactions</small>
+                            <p id="dash-tx-count">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box sent">
+                        <small>TOTAL SENT</small>
+                        <h3>Rs.<span id="stat-sent">0</span></h3>
+                        <p>Outgoing</p>
+                    </div>
+                    <div class="stat-box received">
+                        <small>TOTAL RECEIVED</small>
+                        <h3>Rs.<span id="stat-received">0</span></h3>
+                        <p>Incoming</p>
+                    </div>
+                </div>
+
+                <div class="card recent-activity-card">
+                    <h3>Recent Transactions</h3>
+                    <div class="tx-list" id="dash-tx-list"></div>
+                </div>
+            </section>
+
+            <!-- VIEW: SEND MONEY -->
+            <section id="send-view" class="app-view hidden">
+                <div class="two-column-grid">
+                    <div class="card">
+                        <h3>Payment Details</h3>
+                        <form id="payment-form">
+                            <div class="form-group">
+                                <label>TO UPI ID</label>
+                                <input type="text" id="send-upi" placeholder="e.g. receiver@upi" required>
+                            </div>
+                            <div class="form-group">
+                                <label>AMOUNT (₹)</label>
+                                <input type="number" id="send-amount" placeholder="Enter amount" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>REMARK (OPTIONAL)</label>
+                                <input type="text" id="send-remark" placeholder="e.g. Dinner split">
+                            </div>
+                            <button type="submit" class="btn-primary">Proceed to Pay</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h3>Recent Contacts</h3>
+                        <div class="contacts-list" id="contacts-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: TRANSACTION HISTORY -->
+            <section id="history-view" class="app-view hidden">
+                <div class="card">
+                    <h3>All Transactions</h3>
+                    <p class="muted-text">Chronological payment history</p>
+                    <div class="tx-list" id="history-tx-list"></div>
+                </div>
+            </section>
+
+            <!-- VIEW: PROFILE -->
+            <section id="profile-view" class="app-view hidden">
+                <div class="profile-layout">
+                    <div class="card profile-main-card">
+                        <div class="profile-header-block">
+                            <div class="avatar-large" id="prof-avatar">-</div>
+                            <div>
+                                <small>ACCOUNT HOLDER</small>
+                                <h2 id="prof-name">Name</h2>
+                                <span class="badge-status">VERIFIED WALLET USER</span>
+                            </div>
+                        </div>
+                        <div class="profile-meta-grid">
+                            <div>
+                                <small>UPI ID</small>
+                                <p id="prof-upi">id@upi</p>
+                            </div>
+                            <div>
+                                <small>STATUS</small>
+                                <p class="text-success">Active</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Personal Information</h3>
+                        <div class="info-grid">
+                            <div>
+                                <small>USER ID</small>
+                                <p id="info-id">-</p>
+                            </div>
+                            <div>
+                                <small>DISPLAY NAME</small>
+                                <p id="info-name">-</p>
+                            </div>
+                            <div class="full-width">
+                                <small>EMAIL ADDRESS</small>
+                                <p id="info-email">-</p>
+                            </div>
+                            <div>
+                                <small>PHONE NUMBER</small>
+                                <p id="info-phone">-</p>
+                            </div>
+                            <div>
+                                <small>WALLET STATUS</small>
+                                <p class="text-success">Secure and Active</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

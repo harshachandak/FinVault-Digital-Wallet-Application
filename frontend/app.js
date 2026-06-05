@@ -1,5 +1,5 @@
 // ================= CONNECTIVITY CONFIGURATION =================
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://finvault-backend-36ac.onrender.com/api';
 
 // ================= CUSTOM POPUP TOAST SYSTEM =================
 class Notification {

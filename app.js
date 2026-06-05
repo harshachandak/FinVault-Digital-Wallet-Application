@@ -100,7 +100,7 @@ class WalletApp {
     // Pulls freshest user balance + lists from server database stream
     async refreshUserContext() {
         try {
-            const response = await fetch(`${API_BASE_URL}/user/${this.currentUser.upiId}`);
+           const response = await fetch(`${API_BASE_URL}/api/user/${this.currentUser.upiId}`);
             if (response.ok) {
                 this.currentUser = await response.json();
             }
@@ -125,7 +125,7 @@ class WalletApp {
 
         try {
             // Send payload to Node server registration route
-            const response = await fetch(`${API_BASE_URL}/register`, {
+           const response = await fetch(`${API_BASE_URL}/api/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -155,7 +155,7 @@ class WalletApp {
         };
 
         try {
-            const response = await fetch(`${API_BASE_URL}/login`, {
+            const response = await fetch(`${API_BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -212,7 +212,7 @@ class WalletApp {
         };
 
         try {
-            const response = await fetch(`${API_BASE_URL}/transfer`, {
+            const response = await fetch(`${API_BASE_URL}/api/transfer`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

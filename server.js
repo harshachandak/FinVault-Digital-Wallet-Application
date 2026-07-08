@@ -87,7 +87,7 @@ app.post('/api/transfer', async (req, res) => {
         const receiver = dbData[targetUpi];
 
         if (!sender || !receiver) {
-            return res.status(444).json({ message: 'Target profile or sender profile not found.' });
+            return res.status(404).json({ message: 'Target profile or sender profile not found.' });
         }
         if (sender.pin !== pin.trim()) {
             return res.status(401).json({ message: 'Transaction Declined: Incorrect UPI PIN!' });
